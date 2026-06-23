@@ -4,8 +4,6 @@ tap "yt-dlp/taps"
 brew "chezmoi"
 
 # CLI tools
-brew "ansible"
-brew "ansible-lint"
 brew "fzf"
 brew "gh"
 brew "git"
@@ -13,6 +11,7 @@ brew "jq"
 brew "nmap"
 brew "restic"
 brew "rsync"
+brew "stow"
 brew "tmux"
 brew "uv"
 brew "watch"
@@ -20,27 +19,25 @@ brew "yt-dlp"
 
 # Languages / runtimes
 brew "node"
+brew "python@3.11"
 brew "python@3.13"
-
-# AI
-brew "gemini-cli"
 
 # Editors
 brew "neovim"
 
 # Apps
-cask "alacritty"
 cask "android-file-transfer"
 cask "anki"
 cask "appcleaner"
-cask "balenaetcher"
 cask "calibre"
 cask "claude"
-cask "db-browser-for-sqlite"
+cask "claude-code"
 cask "discord"
+cask "eloston-chromium"
 cask "font-caskaydia-cove-nerd-font"
 cask "font-monaspace"
 cask "ghostty"
+cask "google-chrome"
 cask "google-drive"
 cask "hyperkey"
 cask "keka"
