@@ -44,3 +44,19 @@ fi
 
 # Apply macOS defaults
 bash macos-defaults.sh
+
+# Apply third-party app (Rectangle, Hyperkey) defaults
+bash third-party-defaults.sh
+
+# Some settings (trackpad gestures, input sources, reduce motion) only fully
+# apply after a logout. Offer one now that all bootstrap steps are done.
+if [[ -t 0 ]]; then
+  read -r -p "Some settings need a logout to apply. Log out now? [y/N] " reply
+  if [[ "${reply}" =~ ^[Yy]$ ]]; then
+    osascript -e 'tell application "System Events" to log out'
+  else
+    echo "Skipped logout. Remember to log out before judging trackpad/input settings."
+  fi
+else
+  echo "Non-interactive run: log out manually to apply input settings."
+fi
