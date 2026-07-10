@@ -206,8 +206,12 @@ defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool false
 defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool false
 defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool false
 
-# Hide desktop widgets
+# Hide desktop widgets, and stop clicking the desktop from revealing them
+# (StandardHideWidgets alone only hides them from the persistent desktop view —
+# "Click wallpaper to reveal desktop" is a separate toggle that shows them
+# again on click unless restricted to Stage Manager only)
 defaults write com.apple.WindowManager StandardHideWidgets -bool true
+defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -int 0
 
 # ---------------------------------------------------------------------------
 # Apps: TextEdit, Image Capture, Time Machine
