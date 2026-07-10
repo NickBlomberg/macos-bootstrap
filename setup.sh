@@ -7,6 +7,11 @@ if [[ "$(uname)" != "Darwin" ]]; then
   exit 1
 fi
 
+# Apply system-wide macOS defaults (requires sudo) — done first so the one
+# interactive sudo prompt happens before a long unattended install, and so
+# the script fails early if the user isn't an admin.
+bash macos-system-defaults.sh
+
 # Xcode CLI tools
 if ! xcode-select -p &>/dev/null; then
   echo "Installing Xcode Command Line Tools..."

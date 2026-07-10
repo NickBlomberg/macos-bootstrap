@@ -229,20 +229,6 @@ defaults write com.apple.AdLib allowApplePersonalizedAdvertising -bool false
 defaults write com.apple.controlcenter "NSStatusItem Visible FocusModes" -bool false
 
 # ---------------------------------------------------------------------------
-# SIDE QUEST (locked): system-wide preferences — requires sudo
-# ---------------------------------------------------------------------------
-# These live in /Library/Preferences and are out of scope for per-user runs.
-# Candidate starter block (verify values before enabling):
-#
-#   sudo -v                       # prime sudo; add a keep-alive loop if long
-#   sudo pmset -a lidwake 1       # wake on lid open
-#   sudo pmset -a autorestart 1   # restart on power loss
-#   sudo pmset -b displaysleep 15 # display sleep on battery (minutes)
-#   sudo pmset -c displaysleep 30 # display sleep on charger
-#
-# NOTE: `standbydelay` from older guides is now standbydelaylow/high.
-
-# ---------------------------------------------------------------------------
 # Apply
 # ---------------------------------------------------------------------------
 
