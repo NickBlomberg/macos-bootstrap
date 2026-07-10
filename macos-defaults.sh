@@ -91,10 +91,12 @@ defaults write NSGlobalDomain NSGlassDiffusionSetting -int 0
 defaults write NSGlobalDomain NSMenuEnableActionImages -bool false
 
 # Reduce motion
-# NOTE: writing to com.apple.universalaccess may require the terminal app to
-# have Full Disk Access; verify on the target machine.
-defaults write com.apple.universalaccess reduceMotion -bool true
-echo "NOTE: if reduceMotion didn't take effect, grant this terminal Full Disk Access and re-run."
+# Writing to com.apple.universalaccess requires Full Disk Access for the
+# invoking terminal — without it this fails outright (not silently), which
+# would otherwise abort the rest of this script under set -e.
+if ! defaults write com.apple.universalaccess reduceMotion -bool true 2>/dev/null; then
+  echo "NOTE: reduceMotion needs Full Disk Access for this terminal — grant it in System Settings > Privacy & Security > Full Disk Access, then re-run, or toggle Reduce Motion manually in System Settings > Accessibility > Display."
+fi
 
 # UI sound effects off; alert sound = Tink
 defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -bool false
@@ -149,8 +151,12 @@ defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
 
-# Wipe the default Finder favourite tags (Red/Orange/Yellow/...)
+# Wipe the default Finder favourite tags (Red/Orange/Yellow/...) and hide
+# the separate "Recent Tags" list. NOTE: this does not remove the "Tags"
+# section header itself from the sidebar — no verified defaults key for
+# that; toggle it off by hand via Finder > Settings > Sidebar if wanted.
 defaults write com.apple.finder FavoriteTagNames -array ""
+defaults write com.apple.finder ShowRecentTags -bool false
 
 # Don't litter network shares or USB drives with .DS_Store files
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
@@ -168,6 +174,14 @@ defaults write com.apple.dock orientation -string "left"
 defaults write com.apple.dock tilesize -int 47
 defaults write com.apple.dock launchanim -bool false
 defaults write com.apple.dock mineffect -string "scale"
+
+# Pin exactly these apps in the Dock, replacing Apple's defaults
+defaults write com.apple.dock persistent-apps -array \
+  '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/Ghostty.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>' \
+  '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/Todoist.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>' \
+  '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/Firefox Developer Edition.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>' \
+  '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/Obsidian.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>' \
+  '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/Claude.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>'
 
 # Instant Dock show/hide
 defaults write com.apple.dock autohide-delay -float 0
