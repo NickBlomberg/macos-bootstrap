@@ -36,10 +36,6 @@ defaults write com.knollsoft.Hyperkey launchOnLogin -bool true
 defaults write com.knollsoft.Hyperkey SUEnableAutomaticChecks -bool true
 defaults write com.knollsoft.Hyperkey disabledApps -string '["com.apple.loginwindow"]'
 
-# NOTE: Hyperkey's licence registration (Paddle key) is deliberately NOT
-# automated here — don't commit licence material to a repo. It can be
-# recovered from the purchase email; a runtime reminder prints at the end.
-
 # ---------------------------------------------------------------------------
 # Rectangle — window management on the Hyper chord
 # ---------------------------------------------------------------------------
@@ -69,5 +65,3 @@ defaults write com.knollsoft.Rectangle maximize \
 
 open -a Rectangle 2>/dev/null || true
 open -a Hyperkey  2>/dev/null || true
-
-echo "==> REMINDER: Hyperkey's licence is not automated. Re-enter it manually."

@@ -45,7 +45,7 @@ brew bundle install --file=Brewfile
 echo "[6/9] Enabling background Homebrew updates"
 if ! brew autoupdate status | grep -q "installed and running"; then
   brew autoupdate start --upgrade --greedy --cleanup
-  echo "REMINDER: for in-place cask updates, add ~/Library/Application Support/com.github.domt4.homebrew-autoupdate/brew_autoupdate to System Settings > Privacy & Security > App Management (also allow ruby and Terminal.app). One-time manual step, cannot be scripted."
+  echo "REMINDER: for in-place cask updates, add ~/Library/Application Support/com.github.domt4.homebrew-autoupdate/brew_autoupdate to System Settings > Privacy & Security > App Management (also allow ruby and Ghostty). One-time manual step, cannot be scripted."
 fi
 
 # Age key must be manually copied from Bitwarden before dotfiles can be decrypted
