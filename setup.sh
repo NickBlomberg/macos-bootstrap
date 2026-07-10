@@ -10,11 +10,12 @@ fi
 # Apply system-wide macOS defaults (requires sudo) — done first so the one
 # interactive sudo prompt happens before a long unattended install, and so
 # the script fails early if the user isn't an admin.
+echo "[1/9] Applying system-wide macOS defaults"
 bash macos-system-defaults.sh
 
 # Xcode CLI tools
+echo "[2/9] Installing Xcode Command Line Tools"
 if ! xcode-select -p &>/dev/null; then
-  echo "Installing Xcode Command Line Tools..."
   xcode-select --install
   until xcode-select -p &>/dev/null; do
     sleep 5
@@ -22,8 +23,8 @@ if ! xcode-select -p &>/dev/null; then
 fi
 
 # Homebrew (install if missing, then put it on PATH for this shell — Apple Silicon only)
+echo "[3/9] Installing Homebrew"
 if ! command -v brew &>/dev/null; then
-  echo "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
@@ -33,12 +34,15 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # Ruby code loads. Declared in Brewfile too (tap "domt4/autoupdate", trusted:
 # true), but that alone has a history of being silently dropped for taps
 # without a custom remote (Homebrew/brew#22668) — this is belt-and-braces.
+echo "[4/9] Trusting domt4/autoupdate tap"
 brew trust domt4/autoupdate
 
 # Install packages from the Brewfile (installs chezmoi, among other things)
+echo "[5/9] Installing packages from Brewfile"
 brew bundle install --file=Brewfile
 
 # Enable background Homebrew updates (launchd agent, 24h interval)
+echo "[6/9] Enabling background Homebrew updates"
 if ! brew autoupdate status | grep -q "installed and running"; then
   brew autoupdate start --upgrade --greedy --cleanup
   echo "REMINDER: for in-place cask updates, add ~/Library/Application Support/com.github.domt4.homebrew-autoupdate/brew_autoupdate to System Settings > Privacy & Security > App Management (also allow ruby and Terminal.app). One-time manual step, cannot be scripted."
@@ -53,6 +57,7 @@ if [[ ! -f "$AGE_KEY" ]]; then
 fi
 
 # Apply dotfiles via chezmoi (clone on first run, pull latest on reruns)
+echo "[7/9] Applying dotfiles via chezmoi"
 if [[ ! -d "$HOME/.local/share/chezmoi" ]]; then
   chezmoi init --apply https://github.com/NickBlomberg/dotfiles.git
 else
@@ -60,9 +65,11 @@ else
 fi
 
 # Apply macOS defaults
+echo "[8/9] Applying macOS defaults"
 bash macos-defaults.sh
 
 # Apply third-party app (Rectangle, Hyperkey) defaults
+echo "[9/9] Applying third-party app defaults"
 bash third-party-defaults.sh
 
 # Some settings (trackpad gestures, input sources, reduce motion) only fully
