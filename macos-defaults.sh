@@ -206,6 +206,9 @@ defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool false
 defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool false
 defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool false
 
+# Hide desktop widgets
+defaults write com.apple.WindowManager StandardHideWidgets -bool true
+
 # ---------------------------------------------------------------------------
 # Apps: TextEdit, Image Capture, Time Machine
 # ---------------------------------------------------------------------------
