@@ -64,12 +64,16 @@ if [[ ! -f "$AGE_KEY" ]]; then
   exit 1
 fi
 
-# Apply dotfiles via chezmoi (clone on first run, pull latest on reruns)
+# Apply dotfiles via chezmoi (clone on first run, pull latest on reruns).
+# --init on the update path matters: chezmoi update alone does NOT
+# re-render .chezmoi.toml.tmpl if chezmoi.toml already exists, so changes
+# to the config template (e.g. age encryption setup) would otherwise be
+# silently ignored on reruns.
 echo "[7/9] Applying dotfiles via chezmoi"
 if [[ ! -d "$HOME/.local/share/chezmoi" ]]; then
   chezmoi init --apply https://github.com/NickBlomberg/dotfiles.git
 else
-  chezmoi update
+  chezmoi update --init
 fi
 
 # Apply macOS defaults
