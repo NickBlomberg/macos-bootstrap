@@ -50,11 +50,4 @@ if [[ ! -f /etc/pam.d/sudo_local ]]; then
   sudo sed -i '' 's/^#auth/auth/' /etc/pam.d/sudo_local
 fi
 
-# ---------------------------------------------------------------------------
-# Remote login: explicitly assert OFF (declarative guard)
-# ---------------------------------------------------------------------------
-
-echo "==> Configuring remote login"
-sudo systemsetup -setremotelogin off > /dev/null 2>&1 || true
-
 echo "==> System-wide defaults applied."

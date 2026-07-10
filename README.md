@@ -87,7 +87,7 @@ keyboard input source, reduce motion) only fully apply after one.
 | `setup.sh` | Orchestrator. Every step lives here explicitly — nothing is hidden in hooks or `run_once_` scripts, so the whole bootstrap is readable top to bottom. |
 | `Brewfile` | Formulae, casks, VS Code extensions. Reconciled to match actual `brew leaves` + `brew list --cask` output, not an idealized wishlist. |
 | `macos-defaults.sh` | Per-user `defaults write` preferences (`~/Library/Preferences`) — keyboard, trackpad, Finder, Dock, screenshots, etc. No sudo required. |
-| `macos-system-defaults.sh` | System-wide preferences (`/Library/Preferences`) — machine identity (hostname), timezone, power management, Touch ID for sudo, remote login. Requires sudo, kept separate from `macos-defaults.sh` for that reason. |
+| `macos-system-defaults.sh` | System-wide preferences (`/Library/Preferences`) — machine identity (hostname), timezone, power management, Touch ID for sudo. Requires sudo, kept separate from `macos-defaults.sh` for that reason. |
 | `third-party-defaults.sh` | Rectangle + Hyperkey preferences — the one app-specific defaults script, isolated so it's cheap to drop if either app is ever replaced. |
 
 ## Rectangle + Hyperkey
