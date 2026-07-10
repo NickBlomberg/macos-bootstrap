@@ -26,7 +26,17 @@ sudo scutil --set HostName "Manaslu"
 # the setting applying successfully. `|| true` swallows that known-harmless
 # non-zero exit so `set -e` doesn't abort the rest of the script.
 sudo systemsetup -settimezone "Europe/London" > /dev/null 2>&1 || true
-sudo systemsetup -setusingnetworktime on > /dev/null 2>&1 || true
+
+# -setusingnetworktime actually contacts an NTP server to validate before
+# applying, so on a machine with no network yet (fresh Mac before Wi-Fi is
+# joined, or a VM with no networking) it hangs instead of failing fast.
+# Bound the check so we don't block the rest of the script — safe to re-run
+# once online, since everything here is idempotent.
+if curl --max-time 3 -sI https://apple.com &>/dev/null; then
+  sudo systemsetup -setusingnetworktime on > /dev/null 2>&1 || true
+else
+  echo "No network detected — skipping network time setup. Re-run once online."
+fi
 
 # ---------------------------------------------------------------------------
 # Power management
