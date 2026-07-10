@@ -37,13 +37,21 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 echo "[4/9] Trusting domt4/autoupdate tap"
 brew trust domt4/autoupdate
 
-# Install packages from the Brewfile (installs chezmoi, among other things)
+# Install packages from the Brewfile (installs chezmoi, among other things).
+# A handful of vscode extensions are known to fail on a truly fresh install
+# (brew bundle installs the VS Code cask and its extensions in the same run,
+# before VS Code has ever launched to create ~/.vscode/extensions/extensions.json)
+# — don't let that non-fatal, well-known flakiness halt the rest of the bootstrap.
 echo "[5/9] Installing packages from Brewfile"
-brew bundle install --file=Brewfile
+brew bundle install --file=Brewfile || echo "WARNING: brew bundle reported failures (see above) — continuing anyway. Re-run 'brew bundle install --file=Brewfile' later to retry."
 
 # Enable background Homebrew updates (launchd agent, 24h interval)
 echo "[6/9] Enabling background Homebrew updates"
 if ! brew autoupdate status | grep -q "installed and running"; then
+  # A brand-new user account has never had a per-user LaunchAgent installed,
+  # so ~/Library/LaunchAgents may not exist yet — brew autoupdate start
+  # errors out rather than creating it itself.
+  mkdir -p "$HOME/Library/LaunchAgents"
   brew autoupdate start --upgrade --greedy --cleanup
   echo "REMINDER: for in-place cask updates, add ~/Library/Application Support/com.github.domt4.homebrew-autoupdate/brew_autoupdate to System Settings > Privacy & Security > App Management (also allow ruby and Ghostty). One-time manual step, cannot be scripted."
 fi
