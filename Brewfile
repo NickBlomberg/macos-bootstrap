@@ -1,3 +1,5 @@
+tap "domt4/autoupdate", trusted: true
+
 brew "age"
 brew "chezmoi"
 brew "fzf"

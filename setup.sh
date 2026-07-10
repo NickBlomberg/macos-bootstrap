@@ -24,8 +24,20 @@ fi
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# Homebrew 6.0+ requires explicit trust for third-party taps before their
+# Ruby code loads. Declared in Brewfile too (tap "domt4/autoupdate", trusted:
+# true), but that alone has a history of being silently dropped for taps
+# without a custom remote (Homebrew/brew#22668) — this is belt-and-braces.
+brew trust domt4/autoupdate
+
 # Install packages from the Brewfile (installs chezmoi, among other things)
 brew bundle install --file=Brewfile
+
+# Enable background Homebrew updates (launchd agent, 24h interval)
+if ! brew autoupdate status | grep -q "installed and running"; then
+  brew autoupdate start --upgrade --greedy --cleanup
+  echo "REMINDER: for in-place cask updates, add ~/Library/Application Support/com.github.domt4.homebrew-autoupdate/brew_autoupdate to System Settings > Privacy & Security > App Management (also allow ruby and Terminal.app). One-time manual step, cannot be scripted."
+fi
 
 # Age key must be manually copied from Bitwarden before dotfiles can be decrypted
 AGE_KEY="$HOME/.config/chezmoi/key.txt"
