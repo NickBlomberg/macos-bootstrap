@@ -21,8 +21,12 @@ sudo scutil --set HostName "Manaslu"
 # Time
 # ---------------------------------------------------------------------------
 
-sudo systemsetup -settimezone "Europe/London" > /dev/null
-sudo systemsetup -setusingnetworktime on > /dev/null
+# systemsetup has a long-standing cosmetic bug (Error:-99, InternetServices.m)
+# that prints on virtually every -set* call across every macOS version, despite
+# the setting applying successfully. `|| true` swallows that known-harmless
+# non-zero exit so `set -e` doesn't abort the rest of the script.
+sudo systemsetup -settimezone "Europe/London" > /dev/null 2>&1 || true
+sudo systemsetup -setusingnetworktime on > /dev/null 2>&1 || true
 
 # ---------------------------------------------------------------------------
 # Power management
@@ -46,6 +50,6 @@ fi
 # Remote login: explicitly assert OFF (declarative guard)
 # ---------------------------------------------------------------------------
 
-sudo systemsetup -setremotelogin off > /dev/null
+sudo systemsetup -setremotelogin off > /dev/null 2>&1 || true
 
 echo "==> System-wide defaults applied."
