@@ -126,6 +126,16 @@ defaults write com.apple.screencapture location -string "${HOME}/Pictures/Screen
 defaults write com.apple.screencapture disable-shadow -bool true
 
 # ---------------------------------------------------------------------------
+# Desktop wallpaper
+# ---------------------------------------------------------------------------
+
+# desktoppr must run as the logged-in user, never sudo — it changes user-space
+# settings. Full path to the binary since provisioning scripts may not have
+# /usr/local/bin on PATH. wallpaper.jpg lives at the repo root, next to this
+# script — resolved via $(pwd) since desktoppr wants an absolute path.
+/usr/local/bin/desktoppr "$(pwd)/wallpaper.jpg"
+
+# ---------------------------------------------------------------------------
 # Finder
 # ---------------------------------------------------------------------------
 
