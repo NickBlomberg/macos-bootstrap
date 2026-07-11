@@ -42,8 +42,14 @@ brew trust domt4/autoupdate
 # (brew bundle installs the VS Code cask and its extensions in the same run,
 # before VS Code has ever launched to create ~/.vscode/extensions/extensions.json)
 # — don't let that non-fatal, well-known flakiness halt the rest of the bootstrap.
+#
+# HOMEBREW_CASK_OPTS=--no-quarantine skips Gatekeeper's "downloaded from the
+# internet, are you sure?" prompt on first launch of each cask app. Scoped to
+# this one command only — doesn't touch the shell environment or affect any
+# manual `brew install --cask` run later. Trade-off (Homebrew's own warning):
+# this bypasses Gatekeeper's malware check for these installs.
 echo "[5/9] Installing packages from Brewfile"
-brew bundle install --file=Brewfile || echo "WARNING: brew bundle reported failures (see above) — continuing anyway. Re-run 'brew bundle install --file=Brewfile' later to retry."
+HOMEBREW_CASK_OPTS="--no-quarantine" brew bundle install --file=Brewfile || echo "WARNING: brew bundle reported failures (see above) — continuing anyway. Re-run 'brew bundle install --file=Brewfile' later to retry."
 
 # Enable background Homebrew updates (launchd agent, 24h interval)
 echo "[6/9] Enabling background Homebrew updates"
