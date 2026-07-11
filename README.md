@@ -12,15 +12,53 @@ not there. Don't merge the two.
 
 ## Quick start
 
+> [!WARNING]
+> **Copy the age key from Bitwarden before doing anything else below.**
+> Without it, `setup.sh` gets partway through (Homebrew, packages, etc.)
+> and only then exits with an error when it reaches the dotfiles step —
+> copy the key first and skip that wasted run.
+>
+> ```sh
+> mkdir -p ~/.config/chezmoi && vi ~/.config/chezmoi/key.txt
+> ```
+>
+> Paste the key from Bitwarden, then `:wq` to save and quit. The
+> `mkdir -p &&` matters — `~/.config/chezmoi/` doesn't exist yet on a
+> fresh Mac, so `vi` errors with `E212: Can't open file for writing`
+> without it. Chaining with `&&` on one line means you can't accidentally
+> run just the `vi` half.
+>
+> ```sh
+> chmod 600 ~/.config/chezmoi/key.txt
+> ```
+
+On a genuinely fresh Mac, download this repo directly — no git, Xcode
+tools, or GitHub auth required yet:
+
 ```sh
-git clone git@github.com:NickBlomberg/macos-bootstrap.git
-cd macos-bootstrap
+curl -sL https://github.com/NickBlomberg/macos-bootstrap/archive/refs/heads/main.tar.gz | tar xz
+cd macos-bootstrap-main
 ./setup.sh
 ```
 
-Prompts for your sudo password once, near the start. Everything else runs
-unattended except a final "log out now?" prompt at the end (some settings
-only take effect after logout).
+> [!NOTE]
+> Don't use `git clone` here on a fresh machine. `git` itself isn't
+> installed yet, so invoking it triggers macOS's own Xcode Command Line
+> Tools prompt — a GUI popup that's easy to miss if it opens behind the
+> terminal, and it blocks the clone until accepted. The `curl`/`tar`
+> approach above avoids this entirely (both ship with macOS already), and
+> since this repo is public, no authentication is needed either way.
+> `setup.sh` installs the CLI tools itself as its first real step.
+>
+> If you already have git and just want a proper clone (e.g. to
+> contribute back), use the HTTPS form —
+> `git clone https://github.com/NickBlomberg/macos-bootstrap.git` — not
+> the `git@github.com:...` SSH form, which needs a registered SSH key.
+
+Prompts for your sudo password near the start. A few other steps also need
+you at the keyboard — see [Manual steps](#manual-steps--cant-be-automated)
+below — but most of the run is unattended, ending with a "log out now?"
+prompt (some settings only take effect after logout).
 
 ## Manual steps — can't be automated
 
@@ -35,7 +73,13 @@ only take effect after logout).
       it's missing (see [Prerequisites](#prerequisites))
 
 **During `setup.sh`:**
-- [ ] Approve the sudo password prompt (once, near the start)
+- [ ] Approve the sudo password prompt near the start (and be ready for
+      more: Homebrew's own installer may ask again on a truly fresh
+      machine, and some casks — e.g. Google Drive — prompt for an admin
+      password mid-`brew bundle install`)
+- [ ] Click through the **Xcode Command Line Tools** installer popup
+      (Install → accept the license) — this is a GUI dialog macOS requires
+      approving by hand; the script just polls until it's done
 - [ ] When Rectangle and Hyperkey first launch, grant both **Accessibility**
       permission — a TCC prompt macOS requires approving by hand (see
       [Rectangle + Hyperkey](#rectangle--hyperkey))
@@ -89,6 +133,7 @@ keyboard input source, reduce motion) only fully apply after one.
 | `macos-defaults.sh` | Per-user `defaults write` preferences (`~/Library/Preferences`) — keyboard, trackpad, Finder, Dock, screenshots, etc. No sudo required. |
 | `macos-system-defaults.sh` | System-wide preferences (`/Library/Preferences`) — machine identity (hostname), timezone, power management, Touch ID for sudo. Requires sudo, kept separate from `macos-defaults.sh` for that reason. |
 | `third-party-defaults.sh` | Rectangle + Hyperkey preferences — the one app-specific defaults script, isolated so it's cheap to drop if either app is ever replaced. |
+| `wallpaper.jpg` | Desktop wallpaper, applied via `desktoppr` (a Brewfile cask) in `macos-defaults.sh` — `defaults write` alone can't reliably set the desktop picture on modern macOS. |
 
 ## Rectangle + Hyperkey
 
